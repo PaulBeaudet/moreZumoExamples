@@ -14,14 +14,11 @@ ZumoMotors motors; // 0 is stopped, 400 is full speed
 #define REVERSE_DURATION  400 // ms --time taken baking away from the border
 #define TURN_DURATION     600 // ms --time taken reorienting in a new direction
 
-unsigned long senseEventTime;
-byte reactCode = 0;
+
 
 void setup()//part of code that executes once at the begining of the program
 {
-  // %%%% Robot %%%%%
-  button.waitForButton(); // wait for a 2nd press to go
-  senseEventTime = millis(); //hold a time to count timed events against
+  button.waitForButton(); // wait for a press to get started
 }
 
 void loop()// Part of every Sketch: Continuously runs over and over until out of power
@@ -35,13 +32,6 @@ void loop()// Part of every Sketch: Continuously runs over and over until out of
 }
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$-End of Main loop 
 
-      
-void backUp()// omg, omg, mg, mg
-{
-  motors.setSpeeds(-REVERSE_SPEED, -REVERSE_SPEED);
-  senseEventTime=millis(); 
-}
-
 
 void buttonEvent()
 {
@@ -51,7 +41,6 @@ void buttonEvent()
     button.waitForRelease();// be sure that release event has happend
     button.waitForButton(); // stop and wait for another press 
     //----!!--- this stops the loop till a button event---!!----
-    //mario();
   }//get ready to continue the loop!
 }
 

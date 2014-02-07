@@ -18,6 +18,9 @@ ZumoReflectanceSensorArray sensors(QTR_NO_EMITTER_PIN);//set sensor array as "se
 
 void oldReactions() // code is about to be reperposed!!
 {
+  static byte reactCode = 0;// to keep track
+  static unsigned long senseEventTime = millis();//hold a time to count timed events against
+  
    if (reactCode == 0)//all is normal no task to complete
   {
     sensors.read(sensor_values); // reads array of sensor values
@@ -25,12 +28,14 @@ void oldReactions() // code is about to be reperposed!!
     if (sensor_values[0] COMPARED LIGHT_SENSITIVITY)//!!note: opperator is defined!!
     {// if leftmost sensor detects line, reverse and turn to the right
      reactCode=2;//go left reaction code
-     backUp(); //backn' up
+     motors.setSpeeds(-REVERSE_SPEED, -REVERSE_SPEED);
+     senseEventTime=millis();
     }
     else if (sensor_values[5] COMPARED LIGHT_SENSITIVITY)//!!note: opperator is defined!!
     {// if rightmost sensor detects line, reverse and turn to the left
      reactCode=3;//go right reaction code
-     backUp(); //backn' up, because my daddy taught me good
+     motors.setSpeeds(-REVERSE_SPEED, -REVERSE_SPEED);
+     senseEventTime=millis();
     }
     else
     {// reaction code is null without border sense, go straight
