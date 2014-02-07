@@ -1,6 +1,8 @@
-This is just to give further examples as to what can be done with the Zumo Shield by Pololu
+!!All .ino are tabs in the same sketch!! let me know if there are issues - inof8or@gmail.com
 
-Sketch is meant to sumo on a white ring with black boarders
+</b>This is just to give further examples as to what can be done with the Zumo Shield by Pololu</b>
+
+This sketch is meant to sumo on a white ring with black boarders
 as opposed to traditional black to white
 
 The comments included are geared to people being introduced to programing
