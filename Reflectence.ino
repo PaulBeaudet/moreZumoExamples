@@ -1,67 +1,67 @@
+#define REVERSE_DURATION  200 // ms --time taken reversing away from the border
+#define TURN_DURATION     600 // ms --time taken reorienting in a new direction
 
 #include <QTRSensors.h> //front sensor array
 #include <ZumoReflectanceSensorArray.h> //front sensor array
 
 // ----------Reflectance Sensor Settings
 #define NUM_SENSORS 6 //number of sensors to interate across
-unsigned int sensor_values[NUM_SENSORS]; //Array of reflectence sensors
+unsigned int sensor_values[NUM_SENSORS]; //Array of reflectence sensors (pins A0-A5?)
 // this might need to be tuned for different lighting conditions, surfaces, etc.
 //########################################### reflectance condition value
 #define LIGHT_SENSITIVITY  300 // in microseconds //no indication of scale?
 //#########################################
 ZumoReflectanceSensorArray sensors(QTR_NO_EMITTER_PIN);//set sensor array as "sensors" 
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-#define COMPARED > // this is the comparison type to test for high or low relectence
-//change this in order to switch between reacting to black or white borders
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% definitions of variables and autoplaced values
-
-void oldReactions() // code is about to be reperposed!!
+void reflections() // sets motors to avoid dark or light surfaces
 {
-  static byte reactCode = 0;// to keep track
-  static unsigned long senseEventTime = millis();//hold a time to count timed events against
-  
-   if (reactCode == 0)//all is normal no task to complete
+  static byte reactCode = NUM_SENSORS;// to keep track event timing 0-5 represent reflectence sensors in typical case
+
+  if (reactCode == NUM_SENSORS)//all is normal no task to complete
   {
     sensors.read(sensor_values); // reads array of sensor values
     //in this case only the leftmost and rightmost sensor values are used
-    if (sensor_values[0] COMPARED LIGHT_SENSITIVITY)//!!note: opperator is defined!!
-    {// if leftmost sensor detects line, reverse and turn to the right
-     reactCode=2;//go left reaction code
-     motors.setSpeeds(-REVERSE_SPEED, -REVERSE_SPEED);
-     senseEventTime=millis();
-    }
-    else if (sensor_values[5] COMPARED LIGHT_SENSITIVITY)//!!note: opperator is defined!!
-    {// if rightmost sensor detects line, reverse and turn to the left
-     reactCode=3;//go right reaction code
-     motors.setSpeeds(-REVERSE_SPEED, -REVERSE_SPEED);
-     senseEventTime=millis();
-    }
-    else
-    {// reaction code is null without border sense, go straight
-      motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
-    };
-  }
-  //tasking cases, the monitoring of task allows for multitasking
-  //unsigned long timePassed = millis() - senseEventTime;
-  if (reactCode > 1 && millis() - senseEventTime > REVERSE_DURATION)
-  {//complete backing up case
-    if(reactCode == 2)
+    for (byte i = 0; i < NUM_SENSORS; i++)
     {
-       motors.setSpeeds(TURN_SPEED, -TURN_SPEED);//left sense turn right
+      if (sensor_values[i] > LIGHT_SENSITIVITY)// > to avoid dark < to avoid light
+      {// if leftmost sensor detects line, reverse and turn to the right
+        reactCode = i; // react based on whatever reflectence sensor is triped
+      }
+      else
+      {
+        goFor(9001,400,400);//go forward given no bariers  
+      }// time running out in a lock may be an issue // maybe set time as i?
     }
-    else if(reactCode == 3)
-    {
-      motors.setSpeeds(-TURN_SPEED, TURN_SPEED);//right sense turn left
-    }
-    reactCode = 1;//in either condition reactCode now equals one
-    //in anticipation of completing a turn for the desired duration
   }
-  //
-  if (reactCode == 1 && millis() - senseEventTime > REVERSE_DURATION + TURN_DURATION)
-  {// case of completed reaction 
-    //motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);//resume forward motion
-    //recordCompassHeading();//add heading to eeprom
-    reactCode = 0;
+  else if (reactCode < NUM_SENSORS)
+  {
+    if (goFor(REVERSE_DURATION, -400, -400))// opperational note!! must set the speeds different!!
+    {
+      if (reactCode < NUM_SENSORS/2 )//half, would be an issue with odd sensor amounts
+      {
+        reactCode= NUM_SENSORS+1; //creat turn right event
+      }
+      else
+      {
+        reactCode= NUM_SENSORS+2; //creat turn left event
+      };
+    }
+  }
+  else if (reactCode == NUM_SENSORS + 1)
+  {// if leftmost sensor detects line, reverse and turn to the right
+    if(goFor(TURN_DURATION, 200, -200))
+    {
+      reactCode = NUM_SENSORS;
+    }
+  }
+  else if (reactCode == NUM_SENSORS + 2)
+  {// if rightmost sensor detects line, reverse and turn to the left
+    if(goFor(TURN_DURATION, -200, 200 ))
+    {
+      reactCode = NUM_SENSORS;
+    }
   }
 }
+
+
+

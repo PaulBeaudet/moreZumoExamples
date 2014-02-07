@@ -1,4 +1,4 @@
-/*
+///*
 //libraries
 #include <Wire.h>
 #include <LSM303.h>
@@ -37,7 +37,7 @@ void compassSetup()
   // thus giving non useful results.
   //compass.m_min = (LSM303::vector<int16_t>){-32767, -32767, -32767};
   //compass.m_max = (LSM303::vector<int16_t>){+32767, +32767, +32767};
-  /*
+  ///*
 }
 
 void calibrateCompass()
@@ -153,4 +153,4 @@ float averageHeading()
   return heading(avg);
 }
 
-*/
+//*/

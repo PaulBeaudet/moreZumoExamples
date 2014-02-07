@@ -1,4 +1,4 @@
-/*
+
 #include <ZumoMotors.h> //Drive control
 
 //motors
@@ -11,7 +11,7 @@ void stopMotors()
   motors.setRightSpeed(0);
 }
 
-void goFor( long time, int left, int right)// Thats right, long time..
+boolean goFor( long time, int left, int right)// Thats right, long time..
 {//returns true while still in progress false when times up
 //thus signifing that the next task can take place
   static unsigned long startTime = millis();
@@ -28,8 +28,9 @@ void goFor( long time, int left, int right)// Thats right, long time..
   }
   else if ( millis() - startTime > time )
   {
-    stopMotors();
+    return true;//signal for the next command to take place
   };
+  return false;//signal that the motors are still in process
 }
 
-*/
+
