@@ -9,7 +9,8 @@
 unsigned int sensor_values[NUM_SENSORS]; //Array of reflectence sensors (pins A0-A5?)
 // this might need to be tuned for different lighting conditions, surfaces, etc.
 //########################################### reflectance condition value
-#define LIGHT_SENSITIVITY  300 // in microseconds //no indication of scale?
+#define LIGHT_SENSITIVITY  300 // in microseconds //no indication of scale? 
+//100-300 dark? 1000-3000 light? test it
 //#########################################
 ZumoReflectanceSensorArray sensors(QTR_NO_EMITTER_PIN);//set sensor array as "sensors" 
 
@@ -26,6 +27,7 @@ void reflections() // sets motors to avoid dark or light surfaces
       if (sensor_values[i] > LIGHT_SENSITIVITY)// > to avoid dark < to avoid light
       {// if leftmost sensor detects line, reverse and turn to the right
         reactCode = i; // react based on whatever reflectence sensor is triped
+        headingRecord();//records heading samples in eeprom
       }
       else
       {
@@ -37,6 +39,7 @@ void reflections() // sets motors to avoid dark or light surfaces
   {
     if (goFor(REVERSE_DURATION, -400, -400))// opperational note!! must set the speeds different!!
     {
+      //headingRecord();//records heading samples in eeprom //should be the same heading
       if (reactCode < NUM_SENSORS/2 )//half, would be an issue with odd sensor amounts
       {
         reactCode= NUM_SENSORS+1; //creat turn right event
@@ -51,6 +54,7 @@ void reflections() // sets motors to avoid dark or light surfaces
   {// if leftmost sensor detects line, reverse and turn to the right
     if(goFor(TURN_DURATION, 200, -200))
     {
+      headingRecord();//records heading samples in eeprom
       reactCode = NUM_SENSORS;
     }
   }
@@ -58,6 +62,7 @@ void reflections() // sets motors to avoid dark or light surfaces
   {// if rightmost sensor detects line, reverse and turn to the left
     if(goFor(TURN_DURATION, -200, 200 ))
     {
+      headingRecord();//records heading samples in eeprom
       reactCode = NUM_SENSORS;
     }
   }

@@ -28,9 +28,9 @@ void printResults()//runs in setup
   
   for(int i = 8; i < 100; i++)
   {// Print the heading information that was gathered
-    Serial.print(F("Location "));
+    Serial.print(F("EEPROM "));
     Serial.print(i);
-    Serial.print(F(" - Reading is - "));
+    Serial.print(F(" - heading - "));
     Serial.println(EEPROM.read(i));
   }
 }

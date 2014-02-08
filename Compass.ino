@@ -78,7 +78,8 @@ void rememberCalibration() // remembers calibration from last session
 }
 
 
-#define BUFFER 15 // can amount to sensitivity at degree increments
+#define BUFFER 0 // change heading sensitivity in degree increments
+// what you need in differance before a new reading is recorded
 
 void headingRecord()// reports the heading to the serial monitor
 {
