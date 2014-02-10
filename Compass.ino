@@ -27,17 +27,6 @@ void compassSetup()
   compass.enableDefault();// Enables accelerometer and magnetometer
   compass.writeReg(LSM303::CRB_REG_M, CRB_REG_M_2_5GAUSS); // +/- 2.5 gauss sensitivity to hopefully avoid overflow problems
   compass.writeReg(LSM303::CRA_REG_M, CRA_REG_M_220HZ);    // 220 Hz compass update rate
-  /*
-  Calibration values; the default values of +/-32767 for each axis
-   lead to an assumed magnetometer bias of 0. Use the Calibrate example
-   program to determine appropriate values for your particular unit.
-   */
-  // the following needs to be done to give perspective to the compass
-  // in the following case perspective is set to maxim values
-  // thus giving non useful results.
-  //compass.m_min = (LSM303::vector<int16_t>){-32767, -32767, -32767};
-  //compass.m_max = (LSM303::vector<int16_t>){+32767, +32767, +32767};
-  ///*
 }
 
 void calibrateCompass()

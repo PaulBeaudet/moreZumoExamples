@@ -1,8 +1,8 @@
 
 void promIntWrite(int data, int place)//even numbers only!! 0,2,4,6,8 ext
 {//writes integers to EEPROM
-  EEPROM.write(place, highByte(data));
-  EEPROM.write(place+1, lowByte(data));
+  EEPROM.write(place, highByte(data));//splits int into two bytes
+  EEPROM.write(place+1, lowByte(data));//splits int into two bytes
 }
 
 int promRead(int place)//even numbers only!! 0,2,4,6,8 ext
