@@ -13,25 +13,28 @@
 
 void setup()//Part of every Sketch: Executes once in the begining
 {
-  compassSetup();// intiates the compass
-  intiateCalibration();// waits for a user press to calibrate or give debug read out
+  //compassSetup();// intiates the compass
+  //intiateCalibration();// waits for a user press to calibrate or give debug read out
 }
 
 void loop()// Part of every Sketch: Continuously runs over and over until out of power
 { 
-  musicInterupt();//monitors button (start music-> start motors-> stop music-> stop motors
-
-  //marioInProgress(); //plays notes of Mario theme song as appropriate
-  
-  digitalWrite(LED, LOW); //turn LED off to indicate writing state 
-  // currently heading writes
-  
-  reflections(); // sets the motors according to reflectence sensor events
-  //motorInterupt();
-  
-  //headingRecord();//records heading samples in eeprom 
+  byte situation = buttonInterupt();//monitors button 
+  //0-start music->1-start motors->2-stop music->3-stop motors->0
+  if (situation == 1 || situation == 2)
+  {
+    marioInProgress(); //plays notes of Mario theme song as appropriate
+  }
+  if (situation == 2 || situation == 3)
+  {
+    reflections(); // sets speeds and directions according to reflectence sensor events
+  }
+  else
+  {//stop motors 
+    goFor(9000,0,0); //durration mearly returns true once time has lapsed
+  };// without external flow control motors will perpetually be actuated to the same speed 
 }
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$-End of Main loop 
+
 
 
 
