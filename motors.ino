@@ -5,11 +5,7 @@
 ZumoMotors motors; // 0 is stopped, 400 is full speed
 //negitives are reverse speed
 
-void stopMotors()
-{
-  motors.setLeftSpeed(0);//stop the motors
-  motors.setRightSpeed(0);
-}
+
 
 boolean goFor( long time, int left, int right)// Thats right, long time..
 {//returns true while still in progress false when times up

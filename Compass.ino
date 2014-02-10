@@ -41,7 +41,7 @@ void calibrateCompass()
     running_max.y = max(running_max.y, compass.m.y);// based on the reading
     delay(200);//delay inorder to be sure reading increments as robot spins 
   }
-  stopMotors();//loop will end before gofor completes 
+  goFor(900,0,0);//stop the motors!! 
 
     // write calibration information to EEPROM
 
