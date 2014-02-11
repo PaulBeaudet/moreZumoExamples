@@ -31,13 +31,13 @@ void reflections() // sets motors to avoid dark or light surfaces
       }
       else
       {
-        goFor(9001,400,400);//go forward given no bariers  
+        goFor(9001,400,125);//go forward given no bariers  
       }// time running out in a lock may be an issue // maybe set time as i?
     }
   }
   else if (reactCode < NUM_SENSORS)
   {
-    if (goFor(REVERSE_DURATION, -400, -400))// opperational note!! must set the speeds different!!
+    if (goFor(REVERSE_DURATION, 400, -400))// opperational note!! must set the speeds different!!
     {
       //headingRecord();//records heading samples in eeprom //should be the same heading
       if (reactCode < NUM_SENSORS/2 )//half, would be an issue with odd sensor amounts
@@ -65,6 +65,23 @@ void reflections() // sets motors to avoid dark or light surfaces
       //headingRecord();//records heading samples in eeprom
       reactCode = NUM_SENSORS;
     }
+  }
+}
+
+byte reflectEvent() // returns status of sensors
+{
+  sensors.read(sensor_values); // reads array of sensor values
+  //in this case only the leftmost and rightmost sensor values are used
+  for (byte i = 0; i < NUM_SENSORS; i++)//check all of the sensors
+  {//!!! note that this will always "track" in one direction with preferance to one side
+    if (sensor_values[i] > LIGHT_SENSITIVITY)// > to avoid dark < to avoid light
+    {// if leftmost sensor detects line, reverse and turn to the right
+      return i + 1;//add one to shift up values
+    }
+    else
+    {
+      return 0;//create a boolean false for simple overlook of empty state
+    };
   }
 }
 
