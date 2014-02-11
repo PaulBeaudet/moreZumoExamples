@@ -9,6 +9,8 @@
 #define RESETKEY 0 // <-----needs to be a byte value
 //##################### // I plus one to this every rewrite test
 
+byte event = 0;//event to signal motor actions 
+
 void setup()//Part of every Sketch: Executes once in the begining
 {
   buttonUp();//set up the button
@@ -38,7 +40,20 @@ void loop()// Part of every Sketch: Continuously runs over and over until out of
   }
   if (situation == 2 || situation == 3)
   {
-    reflections(); // sets speeds and directions according to reflectence sensor events
+    //reflections(); // sets speeds and directions according to reflectence sensor events
+    
+    if ( event )
+    {// given an event was detected last loop request reaction 
+      if (motorReact(event))//testing reaction: "assures it occures" 
+      {//when the reaction is complete
+        event = 0;//signal that reaction is done
+      }
+    }
+    else// absent other events
+    {
+      goFor(9000, 400, 200);//drive forward
+      event = reflectEvent();// look for obstacels
+    };
   }
   else
   {//stop motors 
