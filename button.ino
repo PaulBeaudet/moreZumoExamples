@@ -1,14 +1,58 @@
 
-#include <Pushbutton.h> //Button in the back of the Zumo
+#define ZUMOBUTTON 12//define the pin that the zumo button is on
 
-Pushbutton button(ZUMO_BUTTON); // define ZUMO_BUTTON as back button. (pin 12)
-//honestly the you should just set the pin manually
-//library uses 10ms delays to debounce with the .isPressed method
-// and uses switch cases for actual debouncing (.getSingleDebouncedPress)
+void buttonUp()// it's cold out there
+{ 
+  pinMode(ZUMOBUTTON, INPUT);//set the zumo button as an input
+  digitalWrite(ZUMOBUTTON, HIGH);//this sets pull-up resistor/ie input through 20k to 5v
+}
+
+#define BOUNCETIME 10//ms anytime grater is to know the buton has settled
+// wait this long to be sure of a legit press
+#define HOLDSTATE 400//ms
+
+byte pressEvent()// all the jouralist come
+{//checks for a debounced button press event
+  static unsigned long time = millis();
+  static boolean timingState = false;
+
+  if ( digitalRead(ZUMOBUTTON) == LOW ) // low is an event with the pullup
+  {// if the button has been pressed
+    if(timingState)
+    { // given the timer has started
+      if ( millis() - time > BOUNCETIME)
+      { // check if the bounce time has elapesed 
+        if ( millis() - time > HOLDSTATE)
+        {//in case the button is held longer return state 2
+          return 2;// held press
+        }//keep in mind this function can still be read as a boolean 
+        // as anything greater than 0 is = true
+        return 1;//debounced press
+      }  
+      return 0;//return without changing timing state 
+    }
+    timingState = true; // note that the timing state is set
+    time = millis();//placemark when time press event started
+    return 0; // return with the timestate placeholder set
+  }
+  //outside of eventcases given no reading
+  timingState = false; //in case the timing state was set, unset
+  return 0;//not pressed
+}
+
+
+
+void holdForButton()
+{
+  while(!pressEvent())
+  {
+    ;
+  }
+}
 
 void intiateCalibration()
 {  
-  button.waitForButton(); // wait for a first press before getting too excited
+  holdForButton(); // wait for a first press before getting too excited
   if (preSession(RESETKEY))//previous session returns true or false
   {
     printResults();// Prints the results of the last session if it existed
@@ -18,33 +62,15 @@ void intiateCalibration()
   {// calibrate the compass if previous calibration is forgoton
     calibrateCompass();
   };
-  button.waitForButton();//wait before proceeding to loop
 }
 
-
-void musicInterupt()
-{
-  static boolean toggel = 0;//1=true, 0=false
-
-  if ( button.isPressed() ) // waits for button press event
-  {
-    toggel = !toggel;// toggels the toggle! !toggle = not toggle
-    return;
-  }// so if toggle true set false if false set true
-
-  if (toggel)//default if just determines true or false
-  {//as long as the toggle is on (true)
-    marioInProgress();//play next note in the melody if last is done
-  }
-
-}
 
 byte buttonInterupt()// returns actionable situations 
 {//monitors button (0-start music->1-start motors->2-stop music->3-stop motors->0)
   static boolean toggelMusic = 0;//1=true, 0=false
   static boolean toggelMotor = 0;// for a total of 4 cases
 
-  if ( button.isPressed() ) // monitors for button press event
+  if ( pressEvent() ) // monitors for button press event
   {
     if (toggelMusic)
     {
@@ -94,6 +120,16 @@ byte buttonInterupt()// returns actionable situations
     }
   };
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
