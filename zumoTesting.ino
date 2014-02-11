@@ -1,7 +1,5 @@
 //ZumoTesting - Detailed and explained Sumo sketch for the Zumo Arduino Shield
 
-#include <EEPROM.h> // Persitent EEPROM memory storage (runtime persistence)
-
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% definitions of variables and autoplaced values
 
 #define LED 13 // for debuging durring run time (pin 13)
@@ -13,8 +11,21 @@
 
 void setup()//Part of every Sketch: Executes once in the begining
 {
-  //compassSetup();// intiates the compass
-  //intiateCalibration();// waits for a user press to calibrate or give debug read out
+  buttonUp();//set up the button
+  if (DEBUGING)//if we are in the mood to mess around with the compass and try to check results from it
+  {
+    compassSetup();// intiates the compassholdForButton(); // wait for a first press before getting too excited
+    if (preSession(RESETKEY))//previous session returns true or false
+    {
+      printResults();// Prints the results of the last session if it existed
+      // open the serial monitor to see the last samples of heading results !!
+      rememberCalibration();// write the old calibration from EEPROM 
+    }
+    else
+    {// calibrate the compass if previous calibration is forgoton
+      calibrateCompass();
+    };
+  }
 }
 
 void loop()// Part of every Sketch: Continuously runs over and over until out of power
@@ -34,6 +45,8 @@ void loop()// Part of every Sketch: Continuously runs over and over until out of
     goFor(9000,0,0); //durration mearly returns true once time has lapsed
   };// without external flow control motors will perpetually be actuated to the same speed 
 }
+
+
 
 
 

@@ -43,7 +43,7 @@ void calibrateCompass()
   }
   goFor(900,0,0);//stop the motors!! 
 
-    // write calibration information to EEPROM
+  // write calibration information to EEPROM
 
   promIntWrite(running_max.x, 0);//write intergers
   promIntWrite(running_max.y, 2);//to even places in EEPROM
@@ -72,44 +72,39 @@ void rememberCalibration() // remembers calibration from last session
 
 void headingRecord()// reports the heading to the serial monitor
 {
-  static byte index = 8;//initiate as the next adress space in eeprom
   static byte lastHeading;
 
   float more;
   float orLess;
 
-  if (index < 100)//only in the case of availble recording spots 
-  {//less than the key possition which should allow for 91 readings 
-    compass.read();
-    float heading = averageHeading();//read the average heading 
-    //as opposed to the library heading method
-    //################################################testing
-    if (lastHeading + BUFFER > 360)
-    {
-      more = lastHeading - BUFFER; // more will just be a larger number
-    }
-    else
-    {
-      more = lastHeading + BUFFER;
-    };
-    if (lastHeading - BUFFER < 0)
-    {
-      orLess = lastHeading + BUFFER; // orless will just be a smaller number
-    }
-    else
-    {
-      orLess = lastHeading - BUFFER;
-    };
-    if (heading < more || heading > orLess)//!! potential overflow!!!
-      //#@N#########################################testing
-    {
-      digitalWrite(LED, HIGH); //turn the LED on to show writing state
-      lastHeading= (byte) heading;//cast the heading as a byte for recorded degrees all
-      EEPROM.write(index, lastHeading); //record data for testing
-      index++;//increment the index to write to the next place in eeprom
-      //upon next reading
-    }
+
+  compass.read();
+  float heading = averageHeading();//read the average heading 
+  //as opposed to the library heading method
+  //################################################testing
+  if (lastHeading + BUFFER > 360)
+  {
+    more = lastHeading - BUFFER; // more will just be a larger number
   }
+  else
+  {
+    more = lastHeading + BUFFER;
+  };
+  if (lastHeading - BUFFER < 0)
+  {
+    orLess = lastHeading + BUFFER; // orless will just be a smaller number
+  }
+  else
+  {
+    orLess = lastHeading - BUFFER;
+  };
+  if (heading < more || heading > orLess)//!! potential overflow!!!
+    //#@N#########################################testing
+  {
+    lastHeading= (byte) heading;//cast the heading as a byte for recorded degrees all
+    promWrite(lastHeading);
+  }
+
 }
 
 template <typename T> float heading(LSM303::vector<T> v)//?? needed for average heading function!
@@ -128,7 +123,7 @@ template <typename T> float heading(LSM303::vector<T> v)//?? needed for average 
 float averageHeading()
 {
   LSM303::vector<int32_t> avg = {
-    0, 0, 0      };
+    0, 0, 0        };
 
   for(int i = 0; i < 10; i ++)
   {
@@ -144,3 +139,4 @@ float averageHeading()
 }
 
 //*/
+
