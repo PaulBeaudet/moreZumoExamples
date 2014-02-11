@@ -27,7 +27,7 @@ void reflections() // sets motors to avoid dark or light surfaces
       if (sensor_values[i] > LIGHT_SENSITIVITY)// > to avoid dark < to avoid light
       {// if leftmost sensor detects line, reverse and turn to the right
         reactCode = i; // react based on whatever reflectence sensor is triped
-        headingRecord();//records heading samples in eeprom
+        //headingRecord();//records heading samples in eeprom
       }
       else
       {
@@ -54,7 +54,7 @@ void reflections() // sets motors to avoid dark or light surfaces
   {// if leftmost sensor detects line, reverse and turn to the right
     if(goFor(TURN_DURATION, 200, -200))
     {
-      headingRecord();//records heading samples in eeprom
+      //headingRecord();//records heading samples in eeprom
       reactCode = NUM_SENSORS;
     }
   }
@@ -62,7 +62,7 @@ void reflections() // sets motors to avoid dark or light surfaces
   {// if rightmost sensor detects line, reverse and turn to the left
     if(goFor(TURN_DURATION, -200, 200 ))
     {
-      headingRecord();//records heading samples in eeprom
+      //headingRecord();//records heading samples in eeprom
       reactCode = NUM_SENSORS;
     }
   }
