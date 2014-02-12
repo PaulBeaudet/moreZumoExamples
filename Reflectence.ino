@@ -37,7 +37,7 @@ void reflections() // sets motors to avoid dark or light surfaces
   }
   else if (reactCode < NUM_SENSORS)
   {
-    if (goFor(REVERSE_DURATION, 400, -400))// opperational note!! must set the speeds different!!
+    if (goFor(REVERSE_DURATION, -400, -400))// opperational note!! must set the speeds different!!
     {
       //headingRecord();//records heading samples in eeprom //should be the same heading
       if (reactCode < NUM_SENSORS/2 )//half, would be an issue with odd sensor amounts
