@@ -14,14 +14,17 @@ The comments included are geared to people being introduced to programing
 * drive whilst playing tunes 
 * Tune -Mario Theme, Nyan cat would be nice if someone could help plot out the sheet music
 * Sequence sensor and motor events with time checking instead of delays
-* Calibratining compass reading into EEPROM
+* Calibratining compass readings into EEPROM
 * Store melody in program memory to avoid RAM overuse
+* detect when being picked up*
 * Calibrated motors with compass heading*
 * Map an arena patern for speed awareness* 
 * Detect collisions with accelerometer*
 * use external sensors*
 * varify intention fufulment with accelerometer*
-* turn off music one click turn off drive mission second click*
+* define turn degrees with compass*
+* timed button debounce fuction with release detection
+* four state user control (4 mode button cycle)
 
 *Without looking I'm going to say this code is licenced as Pololu licenced their library
 which I believe is BSD.*
