@@ -14,7 +14,7 @@
 
 void promWrite(byte data)
 {//meant for writting debugging samples to the eeprom
-  static int index= KEYADDRESS + 1;// plus one is the next availible space
+  static int index= KEYADDRESS + 1;// +1 is the next availible space
   //start past inportant calibration values
 
   if (index < EEPROMSIZE)
@@ -33,7 +33,7 @@ void promIntWrite(int data, int place)//even numbers only!! 0,2,4,6,8 ext
 int promRead(int place)//even numbers only!! 0,2,4,6,8 ext
 {
   return word(EEPROM.read(place), EEPROM.read(place+1));
-}
+}// reads an integer from EEPROM, word() creats an int from 2 bytes 
 
 void printResults()//runs in setup
 {//prints previous calibration data
