@@ -3,13 +3,13 @@
 // Database ledgend // outlines addresses of persistent runtime data 
 // amount of addressable space on the uno and leonardo - 1
 #define EEPROMSIZE 1024 
-#define KEYADDRESS 12 //place where the session key is stored
+#define KEYADDRESS 10 //place where the session key is stored
 //Sample space to address starts after key address
 
-//0-8 = compass calibration information (int)
-//9-10 = Motor offset 0-400 (int)
-// 11 = weak side 0 = right / 1+ = left
-// 12 key
+//0-6 = compass calibration information (int)
+//8 = Motor offset 0-400 (int) add 1000 for left
+// in this way a boolean is also stored in the motor offset integer
+// 10 = key
 
 
 void promWrite(byte data)
