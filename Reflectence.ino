@@ -14,6 +14,29 @@ unsigned int sensor_values[NUM_SENSORS]; //Array of reflectence sensors (pins A0
 //#########################################
 ZumoReflectanceSensorArray sensors(QTR_NO_EMITTER_PIN);//set sensor array as "sensors" 
 
+// #################### Core functions ########################
+
+// !! there may still be a bug where the zumo starts with a reaction !!
+
+byte reflectEvent() // returns status of sensors
+{
+  sensors.read(sensor_values); // reads array of sensor values
+  //in this case only the leftmost and rightmost sensor values are used
+  for (byte i = 0; i < NUM_SENSORS; i++)//check all of the sensors
+  {//!!! note that this will always "track" in one direction with preferance to one side
+    if (sensor_values[i] > LIGHT_SENSITIVITY)// > to avoid dark < to avoid light
+    {// if leftmost sensor detects line, reverse and turn to the right
+      return i + 1;//add one to shift up values
+    }
+    else
+    {
+      return 0;//create a boolean false for simple overlook of empty state
+    };
+  }
+}
+
+// ########## to be depricated ################################ "removed in future" 
+
 void reflections() // sets motors to avoid dark or light surfaces
 {
   static byte reactCode = NUM_SENSORS;// to keep track event timing 0-5 represent reflectence sensors in typical case
@@ -67,23 +90,5 @@ void reflections() // sets motors to avoid dark or light surfaces
     }
   }
 }
-
-byte reflectEvent() // returns status of sensors
-{
-  sensors.read(sensor_values); // reads array of sensor values
-  //in this case only the leftmost and rightmost sensor values are used
-  for (byte i = 0; i < NUM_SENSORS; i++)//check all of the sensors
-  {//!!! note that this will always "track" in one direction with preferance to one side
-    if (sensor_values[i] > LIGHT_SENSITIVITY)// > to avoid dark < to avoid light
-    {// if leftmost sensor detects line, reverse and turn to the right
-      return i + 1;//add one to shift up values
-    }
-    else
-    {
-      return 0;//create a boolean false for simple overlook of empty state
-    };
-  }
-}
-
 
 
