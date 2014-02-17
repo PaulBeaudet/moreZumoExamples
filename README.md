@@ -2,10 +2,10 @@
 The IDE finds the main file by the name of the folder exactely. 
  Let me know if there are issues - inof8or@gmail.com*
 
-#Detailed Example: Zumo Shield by Pololu#
+#Testing: Zumo Shield by Pololu#
 
 This sketch is meant to sumo on a white ring with black boarders
-as opposed to traditional black to white
+as opposed to traditional black to white. This is easily changed by reversing a wakka wakka (<,>) and adjusting "LIGHT_SENSITIVITY" higher in the reflectence tab.
 
 The comments included are geared to people being introduced to programing
 
