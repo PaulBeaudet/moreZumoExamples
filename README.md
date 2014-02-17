@@ -1,4 +1,5 @@
-*All .ino are tabs in the same sketch*
+*unzipped folder needs to be renamed "zumoTesting" and put in sketch folder*
+*The IDE finds the main file by the name of the folder exactely*
 *let me know if there are issues - inof8or@gmail.com*
 
 #Detailed Example: Zumo Shield by Pololu#
