@@ -1,6 +1,8 @@
 
 #include <ZumoMotors.h> //Drive control
 
+//pins 10, 9 PWM and 8, 7 for direction
+
 //motors
 ZumoMotors motors; // 0 is stopped, 400 is full speed
 //negitives are reverse speed
@@ -34,8 +36,7 @@ void motoCorrect(int left, int right)
   {
     right = nutralize(right, offset);
   };
-  motors.setLeftSpeed(left);//onward!
-  motors.setRightSpeed(right);
+  motors.setSpeeds(left, right);//onward!
 }
 
 int nutralize(int bearing, int offset)
