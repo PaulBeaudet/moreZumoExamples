@@ -17,7 +17,7 @@ The comments included are geared to people being introduced to programing
 * Sequence sensor and motor events with time checking instead of delays
 * Calibratining compass readings into EEPROM
 * Store melody in program memory to avoid RAM overuse
-* detect when being picked up*
+* detect when being picked up
 * Calibrated motors with compass heading*
 * Map an arena patern for speed awareness* 
 * Detect collisions with accelerometer*
