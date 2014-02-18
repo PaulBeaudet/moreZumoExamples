@@ -2,6 +2,9 @@
 #include <ZumoMotors.h> //Drive control
 
 //pins 10, 9 PWM and 8, 7 for direction
+#define GUESSEDOFFSET 40//guessing the offset of the mottors
+//on paul's zumo the right motor is more powerfull
+//add 1000 if the left is more powerfull
 
 //motors
 ZumoMotors motors; // 0 is stopped, 400 is full speed
@@ -25,7 +28,7 @@ ZumoMotors motors; // 0 is stopped, 400 is full speed
 
 void motoCorrect(int left, int right)
 {// calibrated motor heading
-  int offset = promRead(8); //read int from EEPROM  
+  int offset = GUESSEDOFFSET; //promRead(8); //read int from EEPROM  
   // assuming the calibration has been done these are read from eeprom
   if (offset > 400) //discern weak side 
   {//greater than greatest offset, this is left offset case
@@ -41,7 +44,11 @@ void motoCorrect(int left, int right)
 
 int nutralize(int bearing, int offset)
 {// this function writes the offset correctly no matter the direction
-  if ( bearing < 0 ) // if the bearing is negitive (reverse)
+  if ( bearing == 0 ) 
+  {
+    return 0; //the motor is stoped! leave it be
+  }
+  else if ( bearing < 0 ) // if the bearing is negitive (reverse)
   {
     return bearing + offset; // if reverse add offset
   }//example -400 + 15 = -385
@@ -86,6 +93,11 @@ boolean timer(unsigned long time)
 
 // ###### Core functions ################
 
+void stopMotors()
+{//abstracted to remove 0 case from goFor
+  motors.setSpeeds(0,0);
+}
+
 boolean goFor( long time, int left, int right)// Thats right, long time..
 {//returns true while still in progress false when times up
   //thus signifing that the next task can take place
@@ -98,9 +110,9 @@ boolean goFor( long time, int left, int right)// Thats right, long time..
     startTime = millis();
     lastLeft=left;
     lastRight=right;
-    motors.setLeftSpeed(left);//onward!
-    motors.setRightSpeed(right);
-  }
+    //motors.setSpeeds(left, right);//onward!
+    motoCorrect(left, right);// motoCorrect account for offset
+  }//or in other words, one motor being more powerful then the other
   else if ( millis() - startTime > time )
   {
     return true;//signal for the next command to take place

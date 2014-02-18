@@ -4,6 +4,7 @@
 //Some examples extend objects in the library, kinda confusing for beginer and hobbyist
 #include <Adafruit_LSM303.h> //Adafruit's library for the same chip
 //https://github.com/adafruit/Adafruit_LSM303
+
 Adafruit_LSM303 lsm303;
 
 /*

@@ -2,7 +2,6 @@
 #include <ZumoBuzzer.h> //Sounds
 #include <avr/pgmspace.h> //program memory storage
 
-
 ZumoBuzzer buzzer;// set the zumo buzzer as "buzzer"
 
 #define MELODY_LENGTH 95

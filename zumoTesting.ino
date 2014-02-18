@@ -38,16 +38,16 @@ void setup()//Part of every Sketch: Executes once in the begining
 
 void loop()// Part of every Sketch: Continuously runs over and over until out of power
 { 
-  byte situation = buttonInterupt();//monitors button 
+  byte situation = buttonInterupt();//monitors button
+  
   //0-start music->1-start motors->2-stop music->3-stop motors->0
+  
   if (situation == 1 || situation == 2)
   {
     marioInProgress(); //plays notes of Mario theme song as appropriate
   }
   if (situation == 2 || situation == 3)
   {
-    //reflections(); // sets speeds and directions according to reflectence sensor events
-
     if ( event )
     {// given an event was detected last loop request reaction 
       if (motorReact(event))//testing reaction: "assures it occures" 
@@ -61,13 +61,14 @@ void loop()// Part of every Sketch: Continuously runs over and over until out of
       event = reflectEvent();// look for obstacels
     };
   }
-  else// == 0
+  else//in other words if the situation is 0
   {//stop motors 
-    goFor(9000,0,0); //durration mearly returns true once time has lapsed
-  };// without external flow control motors will perpetually be actuated to the same speed 
+    stopMotors(); 
+  };
+  
   if(!event && checkForPickup())
   {//in event case interferance creates false positives
-    goFor(9001,0,0);//stop the presses! Zumo has been picked up!
+    stopMotors();//stop the presses! Zumo has been picked up!
     holdForButton();//wait for a button press to resume
   }
 }
