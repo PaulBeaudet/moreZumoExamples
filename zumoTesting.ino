@@ -3,31 +3,37 @@
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% definitions of variables and autoplaced values
 
 #define LED 13 // for debuging durring run time (pin 13)
-#define DEBUGING false // set to true in order to serial debug last readings
+//#define DEBUGING // uncomment in order to serial debug last readings
 
 //######### change this number to recalibrate
 #define RESETKEY 0 // <-----needs to be a byte value
 //##################### // I plus one to this every rewrite test
+
 
 byte event = 0;//event to signal motor actions 
 
 void setup()//Part of every Sketch: Executes once in the begining
 {
   buttonUp();//set up the button
-  if (DEBUGING)//if we are in the mood to mess around with the compass and try to check results from it
+  //compassAccelUp();// intiates the lsm303 compass and accele
+  lsm303Up();
+  
+// uncomment defined DEBUGING at top to run  
+#ifdef DEBUGING // after runtime debugging, let the zumo run and get data next restart
+  // "if debuging is defined" compile up to the end of the if
+  // wait for a first press before getting too excited
+  if (preSession(RESETKEY))//previous session returns true or false
   {
-    compassSetup();// intiates the compassholdForButton(); // wait for a first press before getting too excited
-    if (preSession(RESETKEY))//previous session returns true or false
-    {
-      printResults();// Prints the results of the last session if it existed
-      // open the serial monitor to see the last samples of heading results !!
-      rememberCalibration();// write the old calibration from EEPROM 
-    }
-    else
-    {// calibrate the compass if previous calibration is forgoton
-      calibrateCompass();
-    };
+    printResults();// Prints the results of the last session if it existed
+    // open the serial monitor to see the last samples of heading results !!
+    rememberCalibration();// write the old calibration from EEPROM 
   }
+  else
+  {// calibrate the compass if previous calibration is forgoton
+    calibrateCompass();
+  };
+#endif // this the end of a defined "if statement", meaning "if" is decided at compile time opposed to run time 
+
 }
 
 void loop()// Part of every Sketch: Continuously runs over and over until out of power
@@ -41,7 +47,7 @@ void loop()// Part of every Sketch: Continuously runs over and over until out of
   if (situation == 2 || situation == 3)
   {
     //reflections(); // sets speeds and directions according to reflectence sensor events
-    
+
     if ( event )
     {// given an event was detected last loop request reaction 
       if (motorReact(event))//testing reaction: "assures it occures" 
@@ -51,15 +57,21 @@ void loop()// Part of every Sketch: Continuously runs over and over until out of
     }
     else// absent other events
     {
-      goFor(9000, 400, 200);//drive forward
+      goFor(9000, 400, 400);//drive forward
       event = reflectEvent();// look for obstacels
     };
   }
-  else
+  else// == 0
   {//stop motors 
     goFor(9000,0,0); //durration mearly returns true once time has lapsed
   };// without external flow control motors will perpetually be actuated to the same speed 
+  if(!event && checkForPickup())
+  {//in event case interferance creates false positives
+    goFor(9001,0,0);//stop the presses! Zumo has been picked up!
+    holdForButton();//wait for a button press to resume
+  }
 }
+
 
 
 

@@ -1,11 +1,12 @@
-///*
-//libraries
-#include <Wire.h>
-#include <LSM303.h>
+#include <Wire.h>// I2C library comes with IDE
+//#include <LSM303.h>// https://github.com/pololu/lsm303-arduino
+//honesly pololu's library is a bit difficult to follow...?
+//Some examples extend objects in the library, kinda confusing for beginer and hobbyist
+#include <Adafruit_LSM303.h> //Adafruit's library for the same chip
+//https://github.com/adafruit/Adafruit_LSM303
+Adafruit_LSM303 lsm303;
 
-//################################Function variables setup
-
-//compass
+/*
 LSM303 compass;
 #define CALIBRATION_SAMPLES 70  // Number of compass readings to take when calibrating
 #define CRB_REG_M_2_5GAUSS 0x60 // CRB_REG_M value for magnetometer +/-2.5 gauss full scale
@@ -16,12 +17,34 @@ LSM303::vector<int16_t> running_min = {
   -32767, -32767, -32767};
 //set up object variables running min/max as ints //creats 6 assosiated variables
 //lowest/highest -2047/2047
+*/
 
-//################################### End variables
 
+byte checkForPickup()
+{//detects if the zumo has been picked up
+  lsm303.read(); //read the z axis of the accelerometer
+  if ( lsm303.accelData.z > 1500)
+  { // detect if its enought acceloration for a pick-up event
+    return 1 ;//return event number if picked up 0 if not
+  }
+  return 0;
+}
 
-void compassSetup()
+void lsm303Up()
 {
+  Wire.begin();
+  if (!lsm303.begin())
+  {
+    bugLight();//flash the LED if the chip Fails to load
+  }
+}
+
+
+
+/*
+
+void compassAccelUp()
+{// intiates the compass and the accelerometer... hopefully...
   Wire.begin(); //open I2C bus as the master to communicate with compass/accel
   compass.init();// Initiate LSM303
   compass.enableDefault();// Enables accelerometer and magnetometer
@@ -137,6 +160,4 @@ float averageHeading()
   // avg is the average measure of the magnetic vector.
   return heading(avg);
 }
-
-//*/
-
+*/
