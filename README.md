@@ -1,10 +1,11 @@
-*All .ino are tabs in the same sketch*
-*let me know if there are issues - inof8or@gmail.com*
+*unzipped folder needs to be renamed "zumoTesting" and put in sketch folder.
+The IDE finds the main file by the name of the folder exactely. 
+ Let me know if there are issues - inof8or@gmail.com*
 
-#Detailed Example: Zumo Shield by Pololu#
+#Testing: Zumo Shield by Pololu#
 
 This sketch is meant to sumo on a white ring with black boarders
-as opposed to traditional black to white
+as opposed to traditional black to white. This is easily changed by reversing a wakka wakka (<,>) and adjusting "LIGHT_SENSITIVITY" higher in the reflectence tab.
 
 The comments included are geared to people being introduced to programing
 
@@ -14,14 +15,17 @@ The comments included are geared to people being introduced to programing
 * drive whilst playing tunes 
 * Tune -Mario Theme, Nyan cat would be nice if someone could help plot out the sheet music
 * Sequence sensor and motor events with time checking instead of delays
-* Calibratining compass reading into EEPROM
+* Calibratining compass readings into EEPROM
 * Store melody in program memory to avoid RAM overuse
+* detect when being picked up*
 * Calibrated motors with compass heading*
 * Map an arena patern for speed awareness* 
 * Detect collisions with accelerometer*
 * use external sensors*
 * varify intention fufulment with accelerometer*
-* turn off music one click turn off drive mission second click*
+* define turn degrees with compass*
+* timed button debounce fuction with release detection
+* four state user control (4 mode button cycle)
 
 *Without looking I'm going to say this code is licenced as Pololu licenced their library
 which I believe is BSD.*
