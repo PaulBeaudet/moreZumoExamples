@@ -5,8 +5,7 @@
 
 void buttonUp()// it's cold out there
 { 
-  pinMode(ZUMOBUTTON, INPUT);//set the zumo button as an input
-  digitalWrite(ZUMOBUTTON, HIGH);//this sets pull-up resistor/ie input through 20k to 5v
+  pinMode(ZUMOBUTTON, INPUT_PULLUP);//set the zumo button as an input
 }
 
 #define BOUNCETIME 10//ms anytime grater is to know the buton has settled

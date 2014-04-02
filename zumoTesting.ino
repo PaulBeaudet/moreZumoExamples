@@ -19,11 +19,11 @@ void loop()// Part of every Sketch: Continuously runs over and over until out of
   
   //0-start music->1-start motors->2-stop music->3-stop motors->0
   
-  if (situation == 1 || situation == 2)
+  if (situation == 2 || situation == 3)
   {
     marioInProgress(); //plays notes of Mario theme song as appropriate
   }
-  if (situation == 2 || situation == 3)
+  if (situation == 1 || situation == 2)
   {
     if ( event )
     {// given an event was detected last loop request reaction 
