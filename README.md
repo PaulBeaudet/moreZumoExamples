@@ -30,6 +30,9 @@ The comments included are geared to people being introduced to programing
 *Without looking I'm going to say this code is licenced as Pololu licenced their library
 which I believe is BSD.*
 
-The zumo shield can be purchased from adafruit.com
-or directly from pololu.com.
+##The zumo shield can be purchased from
+
+adafruit.com- [http://www.adafruit.com/products/1639](http://www.adafruit.com/products/1639)
+
+or directly from pololu.com - [https://www.pololu.com/category/129/zumo-robot-and-accessories](https://www.pololu.com/category/129/zumo-robot-and-accessories)
 
