@@ -57,7 +57,7 @@ void holdForButton()
 // buttonInterupt is to signal four series of presses
 // rotating through the four possible return states 0-3
 
-byte buttonInterupt()// returns actionable situations 
+byte buttonWatch()// returns actionable situations 
 {//monitors button (0-start music->1-start motors->2-stop music->3-stop motors->0)
   static boolean toggelMusic = 0;//1=true, 0=false
   static boolean toggelMotor = 0;// for a total of 4 cases

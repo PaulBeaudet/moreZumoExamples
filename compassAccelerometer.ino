@@ -40,8 +40,6 @@ void lsm303Up()
   }
 }
 
-
-
 /*
 
 void compassAccelUp()

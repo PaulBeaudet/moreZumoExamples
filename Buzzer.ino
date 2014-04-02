@@ -6,7 +6,7 @@ ZumoBuzzer buzzer;// set the zumo buzzer as "buzzer"
 
 #define MELODY_LENGTH 95
 
-prog_uchar note[MELODY_LENGTH] PROGMEM = // the notes to 
+prog_uchar const note[MELODY_LENGTH] PROGMEM = // the notes to 
 {
   NOTE_E(5), SILENT_NOTE, NOTE_E(5), SILENT_NOTE, NOTE_E(5), SILENT_NOTE, NOTE_C(5), NOTE_E(5),
   NOTE_G(5), SILENT_NOTE, NOTE_G(4), SILENT_NOTE,
@@ -29,7 +29,7 @@ prog_uchar note[MELODY_LENGTH] PROGMEM = // the notes to
   SILENT_NOTE, NOTE_E_FLAT(5), SILENT_NOTE, NOTE_D(5), NOTE_C(5)
   };
 
-  PROGMEM prog_uint16_t duration[MELODY_LENGTH] =
+  PROGMEM const prog_uint16_t duration[MELODY_LENGTH] =
 {
   100, 25, 125, 125, 125, 125, 125, 250, 250, 250, 250, 250,
 
