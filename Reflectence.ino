@@ -1,6 +1,6 @@
+// Reflectance.ino ~ Copyright 2015 ~ Paul Beaudet MIT licence - see LICENCE
 #define REVERSE_DURATION  200 // ms --time taken reversing away from the border
 #define TURN_DURATION     600 // ms --time taken reorienting in a new direction
-
 #include <QTRSensors.h> //front sensor array
 #include <ZumoReflectanceSensorArray.h> //front sensor array
 
@@ -15,80 +15,65 @@ unsigned int sensor_values[NUM_SENSORS]; //Array of reflectence sensors (pins A0
 ZumoReflectanceSensorArray sensors(QTR_NO_EMITTER_PIN);//set sensor array as "sensors" 
 
 // #################### Core functions ########################
-
-// !! there may still be a bug where the zumo starts with a reaction !!
-
-byte reflectEvent() // returns status of sensors
-{
+// returns status of sensors
+byte reflectEvent() {
   sensors.read(sensor_values); // reads array of sensor values
-  //in this case only the leftmost and rightmost sensor values are used
-  for (byte i = 0; i < NUM_SENSORS; i++)//check all of the sensors
-  {//!!! note that this will always "track" in one direction with preferance to one side
-    if (sensor_values[i] > LIGHT_SENSITIVITY)// > to avoid dark < to avoid light
-    {// if leftmost sensor detects line, reverse and turn to the right
-      return i + 1;//add one to shift up values
+  //check all of the sensors
+  for (byte i = 0; i < NUM_SENSORS; i++){
+    // Note that this will always "track" in one direction with preferance to one side
+    //    > to avoid dark < to avoid light
+    if (sensor_values[i] > LIGHT_SENSITIVITY){
+      return i + 1; // add one to shift up values: zero is empty state
     }
-    else
-    {
-      return 0;//create a boolean false for simple overlook of empty state
-    };
+    else { return 0; };
+    //create a boolean false for simple overlook of empty state
   }
 }
 
 // ########## to be depricated ################################ "removed in future" 
 
-void reflections() // sets motors to avoid dark or light surfaces
-{
-  static byte reactCode = NUM_SENSORS;// to keep track event timing 0-5 represent reflectence sensors in typical case
-
-  if (reactCode == NUM_SENSORS)//all is normal no task to complete
-  {
+// sets motors to avoid dark or light surfaces
+void reflections() {
+  static byte reactCode = NUM_SENSORS;
+  // to keep track event timing 0-5 represent reflectence sensors in typical case
+  
+  //all is normal no task to complete
+  if (reactCode == NUM_SENSORS) {
     sensors.read(sensor_values); // reads array of sensor values
     //in this case only the leftmost and rightmost sensor values are used
-    for (byte i = 0; i < NUM_SENSORS; i++)
-    {
-      if (sensor_values[i] > LIGHT_SENSITIVITY)// > to avoid dark < to avoid light
-      {// if leftmost sensor detects line, reverse and turn to the right
+    for (byte i = 0; i < NUM_SENSORS; i++){
+      // > to avoid dark < to avoid light
+      if (sensor_values[i] > LIGHT_SENSITIVITY){
         reactCode = i; // react based on whatever reflectence sensor is triped
         //headingRecord();//records heading samples in eeprom
-      }
-      else
-      {
+      } else {
         goFor(9001,400,125);//go forward given no bariers  
       }// time running out in a lock may be an issue // maybe set time as i?
     }
-  }
-  else if (reactCode < NUM_SENSORS)
-  {
-    if (goFor(REVERSE_DURATION, -400, -400))// opperational note!! must set the speeds different!!
-    {
+  } else if (reactCode < NUM_SENSORS) {
+    // opperational note!! must set the speeds different!!
+    if (goFor(REVERSE_DURATION, -400, -400)){
       //headingRecord();//records heading samples in eeprom //should be the same heading
-      if (reactCode < NUM_SENSORS/2 )//half, would be an issue with odd sensor amounts
-      {
+      //half, would be an issue with odd sensor amounts
+      if (reactCode < NUM_SENSORS/2 ){
         reactCode= NUM_SENSORS+1; //creat turn right event
-      }
-      else
-      {
+      } else {
         reactCode= NUM_SENSORS+2; //creat turn left event
       };
     }
-  }
-  else if (reactCode == NUM_SENSORS + 1)
-  {// if leftmost sensor detects line, reverse and turn to the right
-    if(goFor(TURN_DURATION, 200, -200))
-    {
+  } else if (reactCode == NUM_SENSORS + 1) {
+    // if leftmost sensor detects line, reverse and turn to the right
+    if(goFor(TURN_DURATION, 200, -200)) {
       //headingRecord();//records heading samples in eeprom
       reactCode = NUM_SENSORS;
     }
   }
-  else if (reactCode == NUM_SENSORS + 2)
-  {// if rightmost sensor detects line, reverse and turn to the left
-    if(goFor(TURN_DURATION, -200, 200 ))
-    {
+  else if (reactCode == NUM_SENSORS + 2) {
+  // if rightmost sensor detects line, reverse and turn to the left
+    if(goFor(TURN_DURATION, -200, 200 )) {
       //headingRecord();//records heading samples in eeprom
       reactCode = NUM_SENSORS;
     }
   }
 }
-
 
