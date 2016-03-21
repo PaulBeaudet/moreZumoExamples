@@ -1,4 +1,4 @@
-// EEPROM.ino ~ Copyright 2015 ~ Paul Beaudet MIT licence - see LICENCE
+// EEPROM.ino ~ Copyright 2015-2106 ~ Paul Beaudet MIT licence - see LICENCE
 #include <EEPROM.h> // Persitent EEPROM memory storage (runtime persistence)
 
 // Database ledgend // outlines addresses of persistent runtime data 
@@ -68,12 +68,4 @@ boolean preSession(byte key){
     return false;
   };
 }
-
-//######debugging functions
-void bugLight() {          // flashy light function for debugging
-  digitalWrite(LED, HIGH); // turn on LED to show writing state
-  delay(10);               // delay long enought to see the light
-  digitalWrite(LED, LOW);  // turn off LED to show writing state
-}
-
 

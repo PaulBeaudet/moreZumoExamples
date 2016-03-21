@@ -1,7 +1,8 @@
-//compassAccelerometer.ino ~ Copyright 2015 ~ Paul Beaudet MIT licence - see LICENCE
+// LSM303.ino ~ Copyright 2015 ~ Paul Beaudet MIT licence - see LICENCE
+// This is the zumo's on board compass accelormeter
 #include <Wire.h>// I2C library comes with IDE
 #include <Adafruit_LSM303.h> //Adafruit's library for the same chip
-//https://github.com/adafruit/Adafruit_LSM303
+// https://github.com/adafruit/Adafruit_LSM303
 
 Adafruit_LSM303 lsm303;
 
