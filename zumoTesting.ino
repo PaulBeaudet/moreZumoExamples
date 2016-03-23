@@ -17,6 +17,17 @@
 #define RESETKEY 0    // < 256: change to reset persistent calibration options
 #define OFFSET 40     // hard coded offset of the motors set this proper to drive straight
 #define BTNEVENTS 4   // number of events zumo button can trigger
+// steer constants
+#define BACK_LEFT  '1'
+#define BACK       '2'
+#define BACK_RIGHT '3'
+#define SPIN_LEFT  '4'
+#define STOP       '5'
+#define SPIN_RIGHT '6'
+#define FWD_LEFT   '7'
+#define FWD        '8'
+#define FWD_RIGHT  '9'
+#define MAX_POWER 255 // max drive speed
 
 void setup(){         // ### Part of every Sketch: runs once on start up ###
   buttonUp();         // set up the button
@@ -61,14 +72,47 @@ void onListen(){
     char* packet = gather(Serial.read()); // potential pointer to packet of incoming bytes
     if(packet){                           // if we have recieved a pointer to a packet
       if(packet[0] == MOVEMENT){          // if this is a movement packet
-        // do some driving in directions 
-      } else if(packet[0] == SPEED){
-        // change speed of zumo
-      } else if(packet[0] == PROGRAM){
+        steer(packet[1]);                 // do some driving in directions 
+      } else if(packet[0] == SPEED){      // if this is a speed packet
+        speedPower(packet[1]);           // change speed of zumo
+      } else if(packet[0] == PROGRAM){    // if this is a program packet
         // set a program mode
       }
     }
   }
+}
+
+#define ERR 256 // invalid value error flag
+void steer(char mode){
+  if(mode){
+    if     ( mode == STOP)      {stopMotors();}
+    else if( mode == BACK_LEFT) {speedsSet(-100, -200);}
+    else if( mode == BACK)      {speedsSet(-300, -300);}
+    else if( mode == BACK_RIGHT){speedsSet(-200, -100);}
+    else if( mode == SPIN_LEFT) {speedsSet(-200, 200);}
+    else if( mode == SPIN_RIGHT){speedsSet(200, -200);}
+    else if( mode == FWD_LEFT)  {speedsSet(100, 200);}
+    else if( mode == FWD)       {speedsSet(200, 200);}
+    else if( mode == FWD_RIGHT) {speedsSet(200, 100);}
+    else {Serial.println(F("E:Invalid Move"));}
+    Serial.print(F("W:D:"));
+    Serial.println(mode);
+  }
+
+}
+
+void speedPower(char mode){
+  static int zumoSpd = 1; // notice there are no cases where this would be true
+  if(mode){
+    if     (mode == '1'){zumoSpd = MAX_POWER * 0.25;} // 25% spd
+    else if(mode == '2'){zumoSpd = MAX_POWER * 0.50;} // 50% spd
+    else if(mode == '3'){zumoSpd = MAX_POWER * 0.75;} // 75% spd
+    else if(mode == '4'){zumoSpd = MAX_POWER;}
+    else{Serial.println(F("E:Invalid entry"));}
+    Serial.print(F("W:S:"));
+    Serial.println(mode);
+  }
+  // return zumoSpd;
 }
 
 void testingStuff(){  

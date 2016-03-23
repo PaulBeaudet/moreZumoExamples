@@ -12,7 +12,7 @@
 ZumoReflectanceSensorArray sensors(QTR_NO_EMITTER_PIN);//set sensor array as "sensors" 
 
 byte reflectEvent() {                     // returns status of sensors
-  static unsigned int sensor_values[NUM_SENSORS]; //Array of reflectence sensors (pins A0-A5?)
+  static unsigned int sensor_values[NUM_SENSORS]; // Array of reflectence sensors (pins A0-A5?)
   sensors.read(sensor_values);            // reads array of sensor values
   for (byte i = 0; i < NUM_SENSORS; i++){ //check all of the sensors
     // Note that this will always "track" in one direction with preferance to one side
