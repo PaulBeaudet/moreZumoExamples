@@ -7,6 +7,11 @@
   * async button control cycle through 4 modes
   * Remote serial control via android phone or raspi payload
   */
+
+#include <SimpleTimer.h>
+// http://playground.arduino.cc/Code/SimpleTimer#GetTheCode
+SimpleTimer timer;
+
 // ### definitions of constant numbers ###
 #define LED 13        // for debuging durring run time (pin 13)
 #define MONITOR 0     // param for a polymorphic fuction that has a monitor mode
@@ -15,7 +20,7 @@
 #define SPEED 'S'     // signal char for speed change
 #define PROGRAM 'P'   // signal char for 
 #define RESETKEY 0    // < 256: change to reset persistent calibration options
-#define OFFSET 40     // hard coded offset of the motors set this proper to drive straight
+#define OFFSET 1006   // hard coded offset of the motors set this proper to drive straight
 #define BTNEVENTS 4   // number of events zumo button can trigger
 // steer constants
 #define BACK_LEFT  '1'
@@ -52,6 +57,8 @@ void loop(){          // ### Part of every Sketch: Continuously loops ###
   if(onPress == 3){stopMotors();}
   // if not sumo defualt condition is remote control
   if(onPress == 0){onListen();} // listen for remote commands from host
+
+  timer.run();
 } 
 
 // ### END MAIN LOOP ###
@@ -87,18 +94,47 @@ void steer(char mode){
   if(mode){
     if     ( mode == STOP)      {stopMotors();}
     else if( mode == BACK_LEFT) {speedsSet(-100, -200);}
-    else if( mode == BACK)      {speedsSet(-300, -300);}
+    else if( mode == BACK){
+      speedsSet(-100, -100);
+      timer.setTimeout(200, rampBack);
+    }
     else if( mode == BACK_RIGHT){speedsSet(-200, -100);}
-    else if( mode == SPIN_LEFT) {speedsSet(-200, 200);}
-    else if( mode == SPIN_RIGHT){speedsSet(200, -200);}
-    else if( mode == FWD_LEFT)  {speedsSet(100, 200);}
-    else if( mode == FWD)       {speedsSet(200, 200);}
+    else if( mode == SPIN_LEFT){
+      speedsSet(-400, 400);
+      timer.setTimeout(80, stopMotors);
+    } else if( mode == SPIN_RIGHT){
+      speedsSet(400, -400);
+      timer.setTimeout(80, stopMotors);
+    } else if( mode == FWD_LEFT){speedsSet(100, 200);}
+    else if( mode == FWD){
+      speedsSet(100, 100);
+      timer.setTimeout(200, rampUp);
+    }
     else if( mode == FWD_RIGHT) {speedsSet(200, 100);}
     else {Serial.println(F("E:Invalid Move"));}
     Serial.print(F("W:D:"));
     Serial.println(mode);
   }
 
+}
+
+void rampUp(){
+  speedsSet(250, 250);
+  timer.setTimeout(200, rampUp2);
+}
+
+void rampUp2(){
+  speedsSet(100, 100);
+  timer.setTimeout(200, stopMotors);
+}
+void rampBack(){
+  speedsSet(-200, -200);
+  timer.setTimeout(200, rampBack2);
+}
+
+void rampBack2(){
+  speedsSet(-100, -100);
+  timer.setTimeout(200, stopMotors);
 }
 
 void speedPower(char mode){
