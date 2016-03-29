@@ -10,29 +10,15 @@
 
 #include <SimpleTimer.h>
 // http://playground.arduino.cc/Code/SimpleTimer#GetTheCode
-SimpleTimer timer;
+SimpleTimer timer;    // instantiate timer object
 
 // ### definitions of constant numbers ###
 #define LED 13        // for debuging durring run time (pin 13)
 #define MONITOR 0     // param for a polymorphic fuction that has a monitor mode
-#define TRIGGER 1     // truth parameter = true || high     
-#define MOVEMENT 'M'  // signal char for direction change
-#define SPEED 'S'     // signal char for speed change
-#define PROGRAM 'P'   // signal char for 
+#define TRIGGER 1     // truth parameter = true || high
 #define RESETKEY 0    // < 256: change to reset persistent calibration options
-#define OFFSET 1006   // hard coded offset of the motors set this proper to drive straight
+#define OFFSET 13     // hard coded offset of the motors set this proper to drive straight
 #define BTNEVENTS 4   // number of events zumo button can trigger
-// steer constants
-#define BACK_LEFT  '1'
-#define BACK       '2'
-#define BACK_RIGHT '3'
-#define SPIN_LEFT  '4'
-#define STOP       '5'
-#define SPIN_RIGHT '6'
-#define FWD_LEFT   '7'
-#define FWD        '8'
-#define FWD_RIGHT  '9'
-#define MAX_POWER 255 // max drive speed
 
 void setup(){         // ### Part of every Sketch: runs once on start up ###
   buttonUp();         // set up the button
@@ -74,6 +60,10 @@ void sumo(){                           // run async to sumo
   };
 }
 
+#define MOVEMENT 'M'  // signal char for direction change
+#define SPEED 'S'     // signal char for speed change
+#define PROGRAM 'P'   // signal char for 
+
 void onListen(){
   if(Serial.available()){                 // listen for serial events
     char* packet = gather(Serial.read()); // potential pointer to packet of incoming bytes
@@ -81,7 +71,7 @@ void onListen(){
       if(packet[0] == MOVEMENT){          // if this is a movement packet
         steer(packet[1]);                 // do some driving in directions 
       } else if(packet[0] == SPEED){      // if this is a speed packet
-        speedPower(packet[1]);           // change speed of zumo
+        speedPower(packet[1]);            // change speed of zumo
       } else if(packet[0] == PROGRAM){    // if this is a program packet
         // set a program mode
       }
@@ -89,66 +79,49 @@ void onListen(){
   }
 }
 
-#define ERR 256 // invalid value error flag
+// steer constants
+#define BACK_LEFT  '1'
+#define BACK       '2'
+#define BACK_RIGHT '3'
+#define SPIN_LEFT  '4'
+#define STOP       '5'
+#define SPIN_RIGHT '6'
+#define FWD_LEFT   '7'
+#define FWD        '8'
+#define FWD_RIGHT  '9'
+#define MAX_POWER 400 // max drive speed
+
 void steer(char mode){
   if(mode){
+    int pwr = speedPower(MONITOR); // figure current speed of zumo
     if     ( mode == STOP)      {stopMotors();}
-    else if( mode == BACK_LEFT) {speedsSet(-100, -200);}
-    else if( mode == BACK){
-      speedsSet(-100, -100);
-      timer.setTimeout(200, rampBack);
-    }
-    else if( mode == BACK_RIGHT){speedsSet(-200, -100);}
-    else if( mode == SPIN_LEFT){
-      speedsSet(-400, 400);
-      timer.setTimeout(80, stopMotors);
-    } else if( mode == SPIN_RIGHT){
-      speedsSet(400, -400);
-      timer.setTimeout(80, stopMotors);
-    } else if( mode == FWD_LEFT){speedsSet(100, 200);}
-    else if( mode == FWD){
-      speedsSet(100, 100);
-      timer.setTimeout(200, rampUp);
-    }
-    else if( mode == FWD_RIGHT) {speedsSet(200, 100);}
-    else {Serial.println(F("E:Invalid Move"));}
-    Serial.print(F("W:D:"));
-    Serial.println(mode);
+    else if( mode == BACK_LEFT) {speedsSet(-(pwr/2), -pwr);}
+    else if( mode == BACK)      {speedsSet(-pwr, -pwr);}
+    else if( mode == BACK_RIGHT){speedsSet(-pwr, -(pwr/2));}
+    else if( mode == SPIN_LEFT) {speedsSet(-pwr, pwr);}
+    else if( mode == SPIN_RIGHT){speedsSet(pwr, -pwr);}
+    else if( mode == FWD_LEFT)  {speedsSet(pwr/2, pwr);}
+    else if( mode == FWD)       {speedsSet(pwr, pwr);}
+    else if( mode == FWD_RIGHT) {speedsSet(pwr, pwr/2);}
+    else {invalid(mode);}
   }
-
 }
 
-void rampUp(){
-  speedsSet(250, 250);
-  timer.setTimeout(200, rampUp2);
-}
-
-void rampUp2(){
-  speedsSet(100, 100);
-  timer.setTimeout(200, stopMotors);
-}
-void rampBack(){
-  speedsSet(-200, -200);
-  timer.setTimeout(200, rampBack2);
-}
-
-void rampBack2(){
-  speedsSet(-100, -100);
-  timer.setTimeout(200, stopMotors);
-}
-
-void speedPower(char mode){
-  static int zumoSpd = 1; // notice there are no cases where this would be true
+int speedPower(char mode){
+  static int zumoSpeed = MAX_POWER; // defualt to maximum power
   if(mode){
-    if     (mode == '1'){zumoSpd = MAX_POWER * 0.25;} // 25% spd
-    else if(mode == '2'){zumoSpd = MAX_POWER * 0.50;} // 50% spd
-    else if(mode == '3'){zumoSpd = MAX_POWER * 0.75;} // 75% spd
-    else if(mode == '4'){zumoSpd = MAX_POWER;}
-    else{Serial.println(F("E:Invalid entry"));}
-    Serial.print(F("W:S:"));
-    Serial.println(mode);
+    if     (mode == '1'){zumoSpeed = MAX_POWER * 0.25;} // 25% spd
+    else if(mode == '2'){zumoSpeed = MAX_POWER * 0.50;} // 50% spd
+    else if(mode == '3'){zumoSpeed = MAX_POWER * 0.75;} // 75% spd
+    else if(mode == '4'){zumoSpeed = MAX_POWER;}
+    else{invalid(mode);}
   }
-  // return zumoSpd;
+  return zumoSpeed;
+}
+
+void invalid(char entry){
+  Serial.print(entry);
+  Serial.println(F(":Invalid entry"));
 }
 
 void testingStuff(){  
