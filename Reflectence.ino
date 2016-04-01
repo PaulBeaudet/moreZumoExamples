@@ -25,3 +25,16 @@ byte reflectEvent() {                     // returns status of sensors
   }
 }
 
+void reflectOut(){ // readout reflectance values
+  unsigned int sensor_values[NUM_SENSORS]; // Array of reflectence sensors (pins A0-A5?)
+  sensors.read(sensor_values);             // reads array of sensor values
+  Serial.print(F("Reflections"));
+  for (byte i = 0; i < NUM_SENSORS; i++){  //check all of the sensors
+    Serial.print(" ");
+    Serial.print(i);
+    Serial.print(":");
+    Serial.print(sensor_values[i]);
+  }
+  Serial.println();
+}
+

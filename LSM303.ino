@@ -22,3 +22,14 @@ void lsm303Up(){
     bugLight(); //flash the LED if the chip Fails to load
   }
 }
+
+void lsmReadout(){
+  lsm303.read(); // parse all sensor data
+  Serial.print("Accel X: "); Serial.print((int)lsm303.accelData.x); Serial.print(" ");
+  Serial.print("Y: ");       Serial.print((int)lsm303.accelData.y); Serial.print(" ");
+  Serial.print("Z: ");       Serial.print((int)lsm303.accelData.z); Serial.print(" ");
+  Serial.print("Mag X: ");   Serial.print((int)lsm303.magData.x);   Serial.print(" ");
+  Serial.print("Y: ");       Serial.print((int)lsm303.magData.y);   Serial.print(" ");
+  Serial.print("Z: ");       Serial.println((int)lsm303.magData.z);
+}
+

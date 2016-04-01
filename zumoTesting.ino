@@ -22,7 +22,9 @@ SimpleTimer timer;    // instantiate timer object
 
 void setup(){         // ### Part of every Sketch: runs once on start up ###
   buttonUp();         // set up the button
-  Serial.begin(9600); // set up communication to controler (rasppi/android)
+  Serial.begin(9600); // set up communication to controler (rasppi/android) TODO change to 115200
+  lsm303Up();         // set up the compass and accelometer
+  timer.setInterval(5000, sensorReadout); // set sensors to read out to master
 }
 
 void loop(){          // ### Part of every Sketch: Continuously loops ### 
@@ -48,6 +50,11 @@ void loop(){          // ### Part of every Sketch: Continuously loops ###
 } 
 
 // ### END MAIN LOOP ###
+
+void sensorReadout(){
+  lsmReadout(); // readout compass and accellerometer values
+  reflectOut(); // readout reflectance values
+}
 
 // High level functions, see assosiated .ino files for specific function logic
 void sumo(){                           // run async to sumo
