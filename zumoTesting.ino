@@ -69,7 +69,8 @@ void sumo(){                           // run async to sumo
 
 #define MOVEMENT 'M'  // signal char for direction change
 #define SPEED 'S'     // signal char for speed change
-#define PROGRAM 'P'   // signal char for 
+#define PROGRAM 'P'   // signal char for programs
+#define MUSIC 'C'     // signal char for music
 
 void onListen(){
   if(Serial.available()){                 // listen for serial events
@@ -81,6 +82,8 @@ void onListen(){
         speedPower(packet[1]);            // change speed of zumo
       } else if(packet[0] == PROGRAM){    // if this is a program packet
         // set a program mode
+      } else if(packet[0] == MUSIC){      // music packet sent
+        horn(packet[1]);                  // play a sound
       }
     }
   }

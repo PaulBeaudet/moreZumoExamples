@@ -58,6 +58,10 @@ void marioInProgress(){
   } else if (currentIdx == MELODY_LENGTH) { currentIdx = 13; } // reset song
 }
 
-
+void horn(byte trigger){
+  if(trigger && !buzzer.isPlaying()){
+    buzzer.playNote(NOTE_G(5), 200, 15); // idk random note maybe it will sound good
+  }
+}
 
 

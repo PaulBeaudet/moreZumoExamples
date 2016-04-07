@@ -20,6 +20,7 @@ char validCommand(char cmd){
   if     (cmd == MOVEMENT){;}
   else if(cmd == SPEED){;}
   else if(cmd == PROGRAM){;}
+  else if(cmd == MUSIC){;}
   else{
     Serial.print(F("E:Invalid cmd ")); Serial.println(cmd);
     cmd = 0; // set command to zero if not a valid command
