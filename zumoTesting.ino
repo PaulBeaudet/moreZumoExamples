@@ -22,6 +22,7 @@ SimpleTimer timer;    // instantiate timer object
 
 void setup(){           // ### Part of every Sketch: runs once on start up ###
   buttonUp();           // set up the button
+  motorSetup();         // set up motor drivers
   Serial.begin(115200); // set up communication to controler (rasppi/android) TODO change to 115200
   lsm303Up();           // set up the compass and accelometer
   timer.setInterval(5000, sensorReadout); // set sensors to read out to master
